@@ -1,19 +1,34 @@
 mat-card{
   width: 70%;
 }
-.stepper-container {
-  max-width: 800px;
-  margin: 0 auto;
-  display: inline;
-  justify-content: center;
-  align-items: center;
-  
-  .form-content{
+.stepper-layout{
+  display: flex;
+  .stepper-container{
+    min-width: 320px;
     padding: 1rem;
+    box-sizing: border-box;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: auto;
+    position: sticky;
+    height: 90vh;
+    background-color: Rgb(241 243 247);
+    border: 1px solid #d3d3d3;
+    margin-left: 1rem;
+    .stepper-text{
+      font-size: 0.8rem;
+      color: gray;
+    }
   }
+  .step-content{
+    width: 70%;
+    height: 90vh;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: scroll;
+    margin: auto;
+    
+  }
+
 }
 .btn-container {
   margin-top: 2rem;

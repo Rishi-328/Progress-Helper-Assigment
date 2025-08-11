@@ -18,7 +18,7 @@ import { serviceTypes, Organization, vehicleTypes, languages, iconMap } from '..
 export class HelperFormComponent {
   @Input() helperForm!: FormGroup;
   @Input() useCase: 'add-helper' | 'update-helper' =  'add-helper';
-  @Output() formEdit = new EventEmitter<void>();
+  @Output() formAction = new EventEmitter<void>();
   dialog = inject(MatDialog);
   @Input() uploadedPhotoUrl: string | null = null;
   selectedPhotoFile: File | null = null;
@@ -103,8 +103,8 @@ export class HelperFormComponent {
       }
     });
   }
-  onUpdate(){
-    this.formEdit.emit();
+  formSubmit(){
+    this.formAction.emit();
   }
   ngOnInit(): void {
     if (this.useCase === 'update-helper') {

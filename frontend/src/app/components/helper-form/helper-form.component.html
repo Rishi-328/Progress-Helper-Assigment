@@ -119,12 +119,12 @@
         </div>
       </div>
     <div *ngIf="useCase === 'add-helper'" class="btn-container">
-      <button mat-raised-button color="primary" matStepperNext [disabled]="helperForm.invalid">
+      <button mat-raised-button color="primary" (click)="formSubmit()" [disabled]="helperForm.invalid">
         Continue
       </button>
     </div>
     <div *ngIf="useCase === 'update-helper'" class="btn-container">
-        <button mat-raised-button (click)="onUpdate()" color="primary">Save</button>
+        <button mat-raised-button (click)="formSubmit()" color="primary">Save</button>
     </div>
 
     </div>

@@ -22,7 +22,7 @@ import { VerifyDialogComponent } from '../../shared/verify-dialog/verify-dialog.
   templateUrl: './add-helper.component.html',
   styleUrls: ['./add-helper.component.scss']
 })
-export class AddHelperComponent implements OnInit {
+export class AddHelperComponent implements OnInit {  
   @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
   helperForm!: FormGroup;
   dialog = inject(MatDialog);

@@ -15,14 +15,23 @@ export class AdditionalFormComponent {
   @Input() helperForm!: FormGroup;
   @Input() useCase: 'add-helper' | 'update-helper' = 'add-helper';
   @Output() formUpdate = new EventEmitter<void>();
+  @Output() previous = new EventEmitter<void>();
+  @Output() next = new EventEmitter<void>();
   onFileSelected(event: Event) {
     const target = event.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       this.helperForm.patchValue({ additionalDocuments: target.files[0] });
     }
   }
+  goPrevious(){
+    this.previous.emit();
+  }
+  goNext() {
+    this.next.emit();
+  }
   updateHelper() {
     this.formUpdate.emit();
   }
+
 
 }

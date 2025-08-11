@@ -24,8 +24,8 @@
     
     </div>
     <div class="btn-container" *ngIf="useCase === 'add-helper'">
-        <button mat-raised-button color="primary" matStepperPrevious>Previous</button>
-        <button mat-raised-button color="primary" matStepperNext>
+        <button mat-raised-button color="primary" (click)="goPrevious()">Previous</button>
+        <button mat-raised-button color="primary" (click)="goNext()">
         Continue
     </button>
     </div>
