@@ -2,7 +2,13 @@ import qrcode from 'qrcode';
 
 const generateQrCode = async(employeeId: number,fullName: string,typeOfService: string) =>{
     try{
-        const qrCodeUrl = await qrcode.toDataURL(employeeId.toString(),);
+        const qrCodeData = {
+            employeeId: employeeId,
+            fullName: fullName,
+            typeOfService: typeOfService
+        };
+        const qrCodeString = JSON.stringify(qrCodeData);
+        const qrCodeUrl = await qrcode.toDataURL(qrCodeString);
         return qrCodeUrl;
     }catch(error){
         throw new Error('Failed to generate QR code');

@@ -14,8 +14,8 @@
     <div class="info">
       <p>{{helper.fullName}}</p>
       <p>{{helper.typeOfService}}</p>
-      <p style="color: Rgb(226 128 70);;">#{{helper.employeeId}}</p>
-      <img [src]="helper.qrCode" alt="qr code"/>
+      <p style="color: Rgb(226 128 70);">#{{helper.employeeId}}</p>
+      <img [src]="helper.qrCode" alt="qr code" style="height: 100px;width: 100px;"/>
     </div>
     <div class="footer">
       {{helper.organizationName}}
@@ -36,7 +36,7 @@
 
     </div>
     <div class="qr-code">
-      <img [src]="helper.qrCode" alt="qr code"/>
+      <img [src]="helper.qrCode" alt="qr code" style="height: 100px;width: 100px;"/>
     </div>
     <p>(Un-authorized usage of someone else's card could be considered a legal offence.)</p>
 
