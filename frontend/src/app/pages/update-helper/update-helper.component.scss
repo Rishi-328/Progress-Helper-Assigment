@@ -53,8 +53,9 @@
     .form-content {
       padding: 1.2rem;
       border-radius: 8px;
-      margin: 0;
-      width: 100%;
+      margin: auto;
+      min-width: 90vh;
+
     }
     .btn-container {
       margin-top: 2rem;

@@ -11,7 +11,7 @@
     </div>
     <div class="details">
         <div *ngIf="activeOption == 'details'">
-            <mat-card class="form-content">
+            <div class="form-content">
             <app-helper-form 
                 [helperForm]="helperForm" 
                 [useCase]="'update-helper'" 
@@ -19,16 +19,16 @@
                 [uploadedPhotoUrl]="uploadedPhotoUrl"
                 >
             </app-helper-form>
-            </mat-card>
+            </div>
         </div>
         <div *ngIf="activeOption == 'documents'">
-            <mat-card class="form-content">
+            <div class="form-content">
                 <app-additional-form
                 [helperForm]="helperForm"
                 [useCase]="'update-helper'"
                 (formUpdate)="updateHelper()">
                 </app-additional-form>
-            </mat-card>
+            </div>
         </div>
     </div>
 </div>
