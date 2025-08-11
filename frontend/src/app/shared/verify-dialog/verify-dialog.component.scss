@@ -1,0 +1,13 @@
+.verify-dialog{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    h3{
+        color: blue;
+        span{
+            color: black;
+        }
+    }
+}

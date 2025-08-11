@@ -13,6 +13,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { SubmissionComponent } from '../../components/submission/submission.component';
 import { HelperFormComponent } from '../../components/helper-form/helper-form.component';
 import { AdditionalFormComponent } from '../../components/additional-form/additional-form.component';
+import { VerifyDialogComponent } from '../../shared/verify-dialog/verify-dialog.component';
 
 @Component({
   selector: 'app-add-helper',
@@ -78,17 +79,25 @@ export class AddHelperComponent implements OnInit {
           if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
           }
-          const dialogRef = this.dialog.open(SubmissionComponent,{
+          const dialogRef = this.dialog.open(VerifyDialogComponent,{
+            width: '400px',
+            height: '400px',
+            data:{
+              fullName: response.fullName
+            }
+          })
+          dialogRef.afterClosed().subscribe(()=>{
+            const submission = this.dialog.open(SubmissionComponent,{
             width: '600px',
             height: '600px',
             data:{
               helper: response
             }
           })
-          dialogRef.afterClosed().subscribe(()=>{
+          submission.afterClosed().subscribe(()=>{
             this.router.navigate(['/home']);
           })
-          
+          })
         }
       })
   }
