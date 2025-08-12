@@ -1,7 +1,12 @@
 import { Language } from "./language.model";
+export interface FileMeta{
+    url: string;
+    name: string;
+    size: number;
+}
 export interface HelperUser {
     employeeId: number;
-    photo: File | string;
+    photo: File | FileMeta;
     typeOfService: string;
     organizationName: string;
     fullName: string;
@@ -10,9 +15,9 @@ export interface HelperUser {
     phone: string;
     email: string;
     vehicleType: string[];
-    kycDocument: File | string;
+    kycDocument: File | FileMeta;
     kycDocumentType: string;
-    additionalDocuments: File;
+    additionalDocuments: File | FileMeta;
     joinedOn: string;
     qrCode?: string;
 }

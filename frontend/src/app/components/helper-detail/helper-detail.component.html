@@ -29,7 +29,7 @@
     <app-info-row label="Email" [value]="helper.email || '-'"></app-info-row>
     <div class="file-preview">
         <span class="label">KYC Document</span>
-        <a class="view-link" [href]="helper.kycDocument" target="_blank" rel="noopener noreferrer">
+        <a class="view-link" [href]="getKycUrl()" target="_blank" rel="noopener noreferrer">
             <mat-icon class="view-icon">visibility</mat-icon>
             View
         </a>

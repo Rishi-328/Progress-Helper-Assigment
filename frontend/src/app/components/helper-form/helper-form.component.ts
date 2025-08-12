@@ -31,12 +31,7 @@ export class HelperFormComponent {
 
   constructor(private fb: FormBuilder,
       private toastService: ToastService,
-      private helperService : HelpersService,
   ) {}
-
-  getPhotoUrl(): boolean{
-    return this.uploadedPhotoUrl = this.helperForm.get('photo')?.value;
-  }
   onPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -105,11 +100,6 @@ export class HelperFormComponent {
   }
   formSubmit(){
     this.formAction.emit();
-  }
-  ngOnInit(): void {
-    if (this.useCase === 'update-helper') {
-      this.uploadedPhotoUrl = this.helperForm.get('photo')?.value;
-    }
   }
 }
 

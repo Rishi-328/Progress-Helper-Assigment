@@ -49,7 +49,8 @@ export class UpdateHelperComponent {
       this.helperService.getHelperById(this.helperId)
         .subscribe((helper)=>{
           this.helperForm.patchValue(helper);
-          this.uploadedPhotoUrl = this.helperForm.get('photo')?.value;
+          console.log(helper);
+          this.uploadedPhotoUrl = (helper.photo as {url : string}).url;
         })
     }
     
@@ -63,12 +64,18 @@ export class UpdateHelperComponent {
     const formValue = this.helperForm.value;
     Object.keys(formValue).forEach(key => {
       const value = formValue[key];
-      if(value == null || value === undefined) return;
+      if (value == null || value === undefined) return;
       if (Array.isArray(value)) {
         value.forEach((item, index) => {
           formData.append(`${key}[${index}]`, item);
         });
-      } else {
+      }else if (value instanceof File) {
+        formData.append(key, value); 
+      }else if (typeof value === 'object' && value.url) {
+        formData.append(`${key}[url]`, value.url);
+        formData.append(`${key}[name]`, value.name);
+        formData.append(`${key}[size]`, value.size.toString());
+      }else{
         formData.append(key, value);
       }
     });

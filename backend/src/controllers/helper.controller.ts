@@ -17,7 +17,11 @@ export const createHelper = async (req: Request, res: Response) => {
       if(file){
         const public_id = `${field}-${Date.now()}`;
         const result = await uploadImage(file,public_id);
-        req.body[field] = result.secure_url;
+        req.body[field] = {
+          url : result.secure_url,
+          name: file.originalname,
+          size: file.size
+        };
         cleanUpUrls.push(public_id);
       }
     }
@@ -108,15 +112,15 @@ export const deleteHelper = async (req: Request, res: Response)=>{
       return res.status(404).json({message: 'Helper not found'});
     }
     if(helper.photo){
-      const photoName = getImageName(helper.photo);
+      const photoName = getImageName(helper.photo.url ?? '');
       deleteImage(photoName);
     }
     if(helper.kycDocument){
-      const kycName = getImageName(helper.kycDocument);
+      const kycName = getImageName(helper.kycDocument.url ?? '');
       deleteImage(kycName);
     } 
     if(helper.additionalDocuments){
-      const additionalName = getImageName(helper.additionalDocuments);
+      const additionalName = getImageName(helper.additionalDocuments.url ?? '');
       deleteImage(additionalName);
     }  
     
@@ -139,13 +143,17 @@ export const updateHelper = async (req: Request, res: Response) => {
     for(const field of fileNames){
       const file = files?.[field]?.[0];
       if(file){
-        const data = await HelperModel.findOne<{[key:string]:string}>({employeeId: +id},{_id : 0, [field]: 1});
+        const data = await HelperModel.findOne<{[key:string]:any}>({employeeId: +id},{_id : 0, [field]: 1});
         if (data?.[field]) {
-          deleteImage(getImageName(data[field])); 
+          deleteImage(getImageName(data[field].url ?? '')); 
         }
         const public_id = `${field}-${Date.now()}`;
         const result = await uploadImage(file,public_id);
-        updateData[field] = result.secure_url;
+        updateData[field] = {
+          url : result.secure_url,
+          name: file.originalname,
+          size: file.size
+        };
       }else{
         if(req.body[field]){
           updateData[field] = req.body[field];
@@ -155,6 +163,7 @@ export const updateHelper = async (req: Request, res: Response) => {
     }
     const helper = await HelperModel.findOneAndUpdate({ employeeId: +id },updateData,{ new: true });
     if (helper) {
+      console.log("updateData");
       res.status(200).json({ message: 'Changes Saved!'});
     } else {
       res.status(404).json({ message: 'Helper not found' });

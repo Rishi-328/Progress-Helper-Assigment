@@ -12,7 +12,7 @@
                 <div class="pdf-box">
                     <mat-icon color="warn" class="pdf-icon">picture_as_pdf</mat-icon>
                     <div class="file-details">
-                        <div class="file-name">{{ helperForm.get('additionalDocuments')?.value.name }}</div>
+                        <div class="file-name">{{ helperForm.get('additionalDocuments')?.value.name}}</div>
                         <div class="file-size">
                             {{ (helperForm.get('additionalDocuments')?.value.size / 1024 / 1024) | number:'1.2-2' }} MB
                         </div>

@@ -8,7 +8,7 @@
 <mat-dialog-content class="dialog-content">
   <div class="front">
     <div class="profile">
-      <img *ngIf="helper.photo" [src]="helper.photo" alt="Uploaded photo" class="uploaded-image">
+      <img *ngIf="helper.photo" [src]="helper.photo.url" alt="Uploaded photo" class="uploaded-image">
       <span *ngIf="!helper.photo" class="profile-icon">	<mat-icon>person</mat-icon></span>
     </div>
     <div class="info">

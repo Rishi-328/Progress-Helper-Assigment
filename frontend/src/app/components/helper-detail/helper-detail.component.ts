@@ -50,11 +50,18 @@ export class HelperDetailComponent {
       }
         
     })
-
   }
+  getKycUrl(): string {
+    if (typeof File !== 'undefined' && this.helper?.kycDocument instanceof File) {
+      return '';
+    }
+    return (this.helper?.kycDocument as { url: string }).url; 
+  }
+
   getPhotoUrl(): string{
-    if(typeof this.helper?.photo === 'string'){
-      const url = this.helper.photo;
+    const photo = this.helper?.photo as {url: string, name: string, size: number};
+    if(photo && typeof photo.url === 'string') {
+      const url = photo.url;
       return `https://res.cloudinary.com/dg5aldure/image/upload/w_200,h_200,c_fill/helper_upload/${url.substring(url.lastIndexOf('/')+1)}`;
     }
     return '';

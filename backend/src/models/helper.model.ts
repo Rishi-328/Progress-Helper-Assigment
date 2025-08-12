@@ -7,7 +7,11 @@ const helperSchema = new Schema({
         unique: true
     },
     photo: {
-        type: String,
+        type: {
+            url: String,
+            name: String,
+            size: Number
+        },
         required: false
     },
     typeOfService:{
@@ -43,7 +47,11 @@ const helperSchema = new Schema({
         required: true
     },
     kycDocument: {
-        type: String,
+        type: {
+            url: String,
+            name: String,
+            size: Number
+        },
         required: true
     },
     kycDocumentType: {
@@ -51,7 +59,11 @@ const helperSchema = new Schema({
         required: true
     },
     additionalDocuments: {
-        type: String,
+        type: {
+            url: String,
+            name: String,
+            size: Number
+        },
         required: false
     },
     joinedOn: {
