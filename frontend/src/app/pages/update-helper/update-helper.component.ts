@@ -50,7 +50,7 @@ export class UpdateHelperComponent {
         .subscribe((helper)=>{
           this.helperForm.patchValue(helper);
           console.log(helper);
-          this.uploadedPhotoUrl = (helper.photo as {url : string}).url;
+          this.uploadedPhotoUrl = (helper.photo as { url: string })?.url ?? '';
         })
     }
     
