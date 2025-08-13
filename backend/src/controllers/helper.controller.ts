@@ -49,7 +49,7 @@ export const createHelper = async (req: Request, res: Response) => {
 
 export const getHelpers = async (req: Request, res: Response) => {
     try{
-        const {sortBy,searchTerm,service,org} = req.body;
+        const {sortBy,searchTerm,service,org,startDate,endDate} = req.body;
         let filter: any = {};
         if(searchTerm){
           const safeSearch = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -66,7 +66,13 @@ export const getHelpers = async (req: Request, res: Response) => {
         if(org?.length > 0){
           filter.organizationName = { $in: org }; 
         } 
-        console.log(filter);
+        if(startDate && endDate){
+          console.log(startDate, endDate);
+          const start = new Date(startDate).setHours(0, 0, 0, 0);
+          const end = new Date(endDate).setHours(23,59,59,999);
+          filter.joinedOn = {$gte: start, $lte: end};
+        }
+        console.log('filter',filter);
         let query = HelperModel.find(filter);
         if(sortBy){
           query = query.collation({ locale: "en", strength: 2 }).sort({[sortBy]:1});

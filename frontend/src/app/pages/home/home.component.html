@@ -33,11 +33,19 @@
       </mat-card>
       </div>
     </div>
-   <div class="calender">
-     <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [(ngModel)]="selectedDate" hidden>
-    <mat-datepicker #picker></mat-datepicker>
-    <button matButton (click)="picker.open()" class="list-icon"> <mat-icon>event</mat-icon></button>
-   </div>
+  <div class="calender">
+    <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="rangeForm">
+      <input matStartDate formControlName="start" placeholder="Start date" >
+      <input matEndDate formControlName="end" placeholder="End date">
+    </mat-date-range-input>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-raised-button color="primary" matDateRangePickerCancel (click)="resetDate()">Reset</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+    <button matButton (click)="rangePicker.open()" class="list-icon"><mat-icon>event</mat-icon></button>
+  </div>
     <div class="search-input">
       <mat-icon>search</mat-icon>
       <input matInput placeholder="Name, Employee ID, Phone" [(ngModel)]="searchTerm" name="search" type="search" (ngModelChange)="getHelperUsers()" />

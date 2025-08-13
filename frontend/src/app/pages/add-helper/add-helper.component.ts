@@ -49,8 +49,7 @@ export class AddHelperComponent implements OnInit {
       vehicleType: ['',Validators.required],
       kycDocument: [null,Validators.required],
       kycDocumentType: ['',Validators.required],
-      additionalDocuments: [null],
-      joinedOn: [new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })]
+      additionalDocuments: [null]
     });
 
   }

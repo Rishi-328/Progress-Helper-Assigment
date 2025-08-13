@@ -18,7 +18,7 @@ export interface HelperUser {
     kycDocument: File | FileMeta;
     kycDocumentType: string;
     additionalDocuments: File | FileMeta;
-    joinedOn: string;
+    joinedOn: Date;
     qrCode?: string;
 }
 export const serviceTypes = ['Maid','Cook','Nurse','Driver'];

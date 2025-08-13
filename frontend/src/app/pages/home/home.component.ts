@@ -7,9 +7,10 @@ import { MaterialModule } from '../../shared/material.module';
 import { AddHelperComponent } from '../add-helper/add-helper.component';
 import { Router } from '@angular/router'
 import { HelpersService } from '../../services/helpers.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { serviceTypes,Organization,iconMap } from './../../models/helper.model';
 import { FilterMultiselectComponent } from '../../shared/filter-multiselect/filter-multiselect.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
   helperService = inject(HelpersService);
   helperUsers: HelperUser[] = [];
   totalCount: number = 0;
-  sortTerm: string = '';
+  sortTerm: string = 'employeeId';
   searchTerm: string = '';
   serviceTypes: string[] = serviceTypes;
   Organization: string[] = Organization;
@@ -33,7 +34,10 @@ export class HomeComponent implements OnInit {
   org = new FormControl<string[]>([]);
   showFilter: boolean = false;
   hidden: boolean = true;
-
+  rangeForm = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
   onSelectedHelper(helper: HelperUser){
     this.selectedHelper = helper;
   }
@@ -41,7 +45,19 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/add-helper']);
   }
   getHelperUsers() {
-    this.helperService.getHelpers(this.sortTerm,this.searchTerm,this.service.value || [],this.org.value || [])
+    const normalizeUTC  = (date: Date) =>{
+      return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    }
+    const startDate = this.rangeForm.value.start ? normalizeUTC(this.rangeForm.value.start) : undefined;
+    const endDate = this.rangeForm.value.end ? normalizeUTC(this.rangeForm.value.end) : undefined;
+    this.helperService.getHelpers(
+      this.sortTerm,
+      this.searchTerm,
+      this.service.value || [],
+      this.org.value || [],
+      startDate,
+      endDate
+    )
       .subscribe({
         next: (response: HelperUser[])=>{
           this.helperUsers = response;
@@ -74,6 +90,10 @@ export class HomeComponent implements OnInit {
     this.hidden = true;
     this.getHelperUsers();
   }
+  resetDate() {
+    this.rangeForm.reset();
+    this.getHelperUsers();
+  }
   onDateChange(event: any) {
     this.selectedDate = event.value;
     this.getHelperUsers();
@@ -81,6 +101,12 @@ export class HomeComponent implements OnInit {
   ngOnInit(){
     this.getHelperUsers();
     this.getCount();
+    this.rangeForm.valueChanges.subscribe((value)=>{
+      if(value.start && value.end){
+        console.log(value.start, value.end);
+        this.getHelperUsers();
+      }
+    })
   }
 
 }

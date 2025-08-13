@@ -5,6 +5,7 @@ import { InfoRowComponent } from '../../shared/info-row/info-row.component';
 import { DividerComponent } from '../../shared/divider/divider.component';
 import { MaterialModule } from '../../shared/material.module';
 import { Subscription } from 'rxjs';
+import { url } from 'node:inspector';
 
 @Component({
   selector: 'app-add-helper-review',
@@ -13,25 +14,14 @@ import { Subscription } from 'rxjs';
   templateUrl: './add-helper-review.component.html',
   styleUrl: './add-helper-review.component.scss'
 })
-export class AddHelperReviewComponent implements OnInit, OnDestroy {
+export class AddHelperReviewComponent implements OnInit {
+  currentDate: Date = new Date();
   @Input() helperForm?: FormGroup;
   kycFileUrl: string | null = null;
 
-  private kycSub?: Subscription;
-
   ngOnInit(): void {
     if (this.helperForm?.get('kycDocument')) {
-      this.kycSub = this.helperForm.get('kycDocument')!.valueChanges.subscribe((file: File) => {
-        if (file) {
-          this.kycFileUrl = URL.createObjectURL(file);
-        } else {
-          this.kycFileUrl = null;
-        }
-      });
+      this.kycFileUrl = URL.createObjectURL(this.helperForm.get('kycDocument')?.value);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.kycSub?.unsubscribe();
   }
 }

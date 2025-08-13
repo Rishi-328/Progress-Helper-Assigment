@@ -11,8 +11,16 @@ export class HelpersService {
   constructor(private httpClient : HttpClient) { }
   private url = 'http://localhost:5000/api/helpers';
 
-  getHelpers(sortBy: string='',searchTerm: string='',service: string[]=[], org: string[] = []): Observable<HelperUser[]>{
-    return this.httpClient.post<HelperUser[]>(`${this.url}/getAll`,{sortBy,searchTerm,service,org});
+  getHelpers(sortBy: string='',searchTerm: string='',service: string[]=[], org: string[] = [],startDate?: Date, endDate?: Date): Observable<HelperUser[]>{
+    const body = {
+      sortBy,
+      searchTerm,
+      service,
+      org,
+      startDate: startDate ? startDate.toISOString() : null,
+      endDate: endDate ? endDate.toISOString() : null
+    }
+    return this.httpClient.post<HelperUser[]>(`${this.url}/getAll`,body);
   }
 
   addHelper(helper: FormData): Observable<HelperUser>{

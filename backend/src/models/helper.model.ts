@@ -67,8 +67,8 @@ const helperSchema = new Schema({
         required: false
     },
     joinedOn: {
-        type: String,
-        default: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+        type: Date,
+        default: Date.now
     },
     qrCode:{
         type: String,

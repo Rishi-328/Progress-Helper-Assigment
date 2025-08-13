@@ -26,7 +26,7 @@
     <app-divider text="SERVICE DETAILS"></app-divider>
     <app-info-row label="Type" [value]="helperForm.get('typeOfService')?.value"></app-info-row>
     <app-info-row label="Organization" [value]="helperForm.get('organizationName')?.value"></app-info-row>
-    <app-info-row label="Joined On" [value]="helperForm.get('joinedOn')?.value"></app-info-row>
+    <app-info-row label="Joined On" [value]="currentDate | date: 'dd, MMM, yyyy'"></app-info-row>
 
   </div>
 </div>
