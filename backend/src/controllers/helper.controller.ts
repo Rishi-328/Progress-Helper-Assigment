@@ -8,6 +8,23 @@ import generateQrCode from '../utils/qrcode';
 export const createHelper = async (req: Request, res: Response) => {
   let cleanUpUrls: string[] = [];
   try {
+    const phoneNumberExist = await HelperModel.findOne({phone: req.body.phone});
+    if(phoneNumberExist){
+      return res.status(400).json({message: 'Helper with this phone number already exists'});
+    }
+    if(req.body.email){
+      const emailExist = await HelperModel.findOne({email: req.body.email});
+      if(emailExist){
+        return res.status(400).json({message: 'Helper with this email already exists'});
+      }
+    }
+    await getNextId()
+      .then((id)=>{
+        req.body.employeeId = id;
+      })
+      .catch(error =>{
+        console.error('Error in generating employeeId: ',error);
+    })
     const files = req.files as {
       [fiedname: string]: Express.Multer.File[];
     }
@@ -25,21 +42,13 @@ export const createHelper = async (req: Request, res: Response) => {
         cleanUpUrls.push(public_id);
       }
     }
-    await getNextId('employeeId')
-      .then((id)=>{
-        req.body.employeeId = id;
-      })
-      .catch(error =>{
-        console.error('Error in generating employeeId: ',error);
-      })
     const newHelper = new HelperModel(req.body);
     const qrCodeUrl = await generateQrCode(newHelper.employeeId,newHelper.fullName,newHelper.typeOfService);
     newHelper.qrCode = qrCodeUrl;
     await newHelper.save();
-
     res.status(201).json(newHelper);
-  } catch (error) {
-    res.status(500).json({ message: 'Upload failed', error });
+  }catch (error) {
+    res.status(500).json({message: 'Failed to create helper',error});
     for(const public_id of cleanUpUrls){
       deleteImage(public_id);
     }
@@ -67,18 +76,15 @@ export const getHelpers = async (req: Request, res: Response) => {
           filter.organizationName = { $in: org }; 
         } 
         if(startDate && endDate){
-          console.log(startDate, endDate);
           const start = new Date(startDate).setHours(0, 0, 0, 0);
           const end = new Date(endDate).setHours(23,59,59,999);
           filter.joinedOn = {$gte: start, $lte: end};
         }
-        console.log('filter',filter);
         let query = HelperModel.find(filter);
         if(sortBy){
           query = query.collation({ locale: "en", strength: 2 }).sort({[sortBy]:1});
         }
         const helpers = await query;
-        console.log(helpers);
         res.status(200).json(helpers);
 
     }catch(error){
@@ -99,7 +105,7 @@ export const getCount = async (req: Request, res: Response)=>{
 export const getHelperById = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
-    const helper = await HelperModel.findOne({employeeId: id});
+    const helper = await HelperModel.findById(id);
     if (helper) {
       res.status(200).json(helper);
     }else{
@@ -113,7 +119,7 @@ export const getHelperById = async (req: Request, res: Response) => {
 export const deleteHelper = async (req: Request, res: Response)=>{
   try{
     const {id} = req.params;
-    const helper = await HelperModel.findOneAndDelete({employeeId: +id});
+    const helper = await HelperModel.findByIdAndDelete({ _id: id});
     if(!helper){
       return res.status(404).json({message: 'Helper not found'});
     }
@@ -149,7 +155,7 @@ export const updateHelper = async (req: Request, res: Response) => {
     for(const field of fileNames){
       const file = files?.[field]?.[0];
       if(file){
-        const data = await HelperModel.findOne<{[key:string]:any}>({employeeId: +id},{_id : 0, [field]: 1});
+        const data = await HelperModel.findById<{[key:string]:any}>(id,{_id : 0, [field]: 1});
         if (data?.[field]) {
           deleteImage(getImageName(data[field].url ?? '')); 
         }
@@ -167,9 +173,8 @@ export const updateHelper = async (req: Request, res: Response) => {
       }
 
     }
-    const helper = await HelperModel.findOneAndUpdate({ employeeId: +id },updateData,{ new: true });
+    const helper = await HelperModel.findByIdAndUpdate(id,updateData,{ new: true });
     if (helper) {
-      console.log("updateData");
       res.status(200).json({ message: 'Changes Saved!'});
     } else {
       res.status(404).json({ message: 'Helper not found' });

@@ -12,7 +12,6 @@ const helperSchema = new Schema({
             name: String,
             size: Number
         },
-        required: false
     },
     typeOfService:{
         type: String,
@@ -37,14 +36,21 @@ const helperSchema = new Schema({
     phone: {
         type: String,
         required: true,   
+        unique: true
     },
     email: {
         type: String,
-        required: true
+        unique: true
     },
     vehicleType: {
         type: String,
         required: true
+    },
+    vehicleNumber:{
+        type: String,
+        required: function(this: {vehicleType: string}){
+            return this.vehicleType !== 'None';
+        }
     },
     kycDocument: {
         type: {
@@ -64,7 +70,6 @@ const helperSchema = new Schema({
             name: String,
             size: Number
         },
-        required: false
     },
     joinedOn: {
         type: Date,

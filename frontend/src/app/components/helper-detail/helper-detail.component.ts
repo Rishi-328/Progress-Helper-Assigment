@@ -26,7 +26,7 @@ export class HelperDetailComponent {
   readonly dialog = inject(MatDialog);
   constructor() {}
   editHelper() {
-    this.router.navigate(['/update',this.helper?.employeeId]);
+    this.router.navigate(['/update',this.helper?._id]);
   }
   deleteHelper(){
     if (document.activeElement instanceof HTMLElement) {
@@ -37,7 +37,7 @@ export class HelperDetailComponent {
     });
     dialogRef.afterClosed().subscribe(result=>{
       if(result === 'Delete' && this.helper?.employeeId !== undefined){
-        this.helperService.deleteHelper(this.helper.employeeId)
+        this.helperService.deleteHelper(this.helper._id)
           .subscribe({
             next: (response)=>{
             this.toastService.success(response.message);

@@ -47,11 +47,20 @@ export class AddHelperComponent implements OnInit {
       phone: ['', [Validators.required, Validators.pattern('^[+]?[91]?[0-9]{10}$|^[+]?[91]?[6-9][0-9]{9}$')]],
       email: ['', [Validators.email]],
       vehicleType: ['',Validators.required],
+      vehicleNumber: ['',Validators.required],
       kycDocument: [null,Validators.required],
       kycDocumentType: ['',Validators.required],
       additionalDocuments: [null]
     });
-
+    this.helperForm.get('vehicleType')?.valueChanges.subscribe(value =>{
+      const vehicleNumberValidity = this.helperForm.get('vehicleNumber');
+      if(value && value === 'None'){
+        vehicleNumberValidity?.clearValidators();
+      }else{
+        vehicleNumberValidity?.setValidators([Validators.required]);
+      }
+      vehicleNumberValidity?.updateValueAndValidity();
+    })
   }
   onFormSubmit(){
     if (this.helperForm.invalid) {
@@ -98,6 +107,9 @@ export class AddHelperComponent implements OnInit {
           })
           })
         }
+      ,error: (error)=>{
+        this.toastService.error(error.error.message);
+      }
       })
   }
 }

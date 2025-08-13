@@ -40,16 +40,25 @@ export class UpdateHelperComponent {
       phone: ['', [Validators.required, Validators.pattern('^[+]?[91]?[0-9]{10}$|^[+]?[91]?[6-9][0-9]{9}$')]],
       email: ['', [Validators.email]],
       vehicleType: ['',Validators.required],
+      vehicleNumber: ['',Validators.required],
       kycDocument: [null,Validators.required],
       kycDocumentType: ['',Validators.required],
       additionalDocuments: [null],
       joinedOn: [new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })]
     });
+    this.helperForm.get('vehicleType')?.valueChanges.subscribe(value =>{
+      const vehicleNumberValidity = this.helperForm.get('vehicleNumber');
+      if(value && value === 'None'){
+        vehicleNumberValidity?.clearValidators();
+      }else{
+        vehicleNumberValidity?.setValidators([Validators.required]);
+      }
+      vehicleNumberValidity?.updateValueAndValidity();
+    })
     if(this.helperId){
       this.helperService.getHelperById(this.helperId)
         .subscribe((helper)=>{
           this.helperForm.patchValue(helper);
-          console.log(helper);
           this.uploadedPhotoUrl = (helper.photo as { url: string })?.url ?? '';
         })
     }
@@ -79,10 +88,7 @@ export class UpdateHelperComponent {
         formData.append(key, value);
       }
     });
-    console.log(this.helperForm.value);
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
+
     if(this.helperId){
       this.helperService.updateHelper(this.helperId,formData)
         .subscribe({

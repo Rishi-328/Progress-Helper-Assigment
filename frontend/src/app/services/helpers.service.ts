@@ -38,7 +38,7 @@ export class HelpersService {
     return this.httpClient.get<HelperUser>(`${this.url}/get/${id}`);
   }
 
-  deleteHelper(id: number): Observable<{message: string}>{
+  deleteHelper(id: string): Observable<{message: string}>{
     return this.httpClient.delete<{message: string}>(`${this.url}/delete/${id}`);
   } 
 

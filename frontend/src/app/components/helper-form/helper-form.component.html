@@ -94,8 +94,12 @@
       <mat-label>Choose Vehicle Type</mat-label>
       <mat-select formControlName="vehicleType">
           <mat-option *ngFor="let vehicleType of vehicleTypes" [value]="vehicleType">{{vehicleType}}</mat-option>
-
       </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" *ngIf="helperForm.get('vehicleType')?.value.length > 0 && helperForm.get('vehicleType')?.value !== 'None'">
+      <mat-label>Vehicle Number</mat-label>
+      <input matInput formControlName="vehicleNumber" placeholder="TG01AB1234">
   </mat-form-field>
 
     <div class="upload-container">
@@ -124,7 +128,7 @@
       </button>
     </div>
     <div *ngIf="useCase === 'update-helper'" class="btn-container">
-        <button mat-raised-button (click)="formSubmit()" color="primary">Save</button>
+        <button mat-raised-button (click)="formSubmit()" color="primary" [disabled]="helperForm.invalid">Save</button>
     </div>
 
     </div>

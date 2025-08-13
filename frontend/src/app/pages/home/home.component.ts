@@ -103,7 +103,6 @@ export class HomeComponent implements OnInit {
     this.getCount();
     this.rangeForm.valueChanges.subscribe((value)=>{
       if(value.start && value.end){
-        console.log(value.start, value.end);
         this.getHelperUsers();
       }
     })

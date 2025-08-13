@@ -15,11 +15,13 @@ export interface HelperUser {
     phone: string;
     email: string;
     vehicleType: string[];
+    vehicleNumber: string;
     kycDocument: File | FileMeta;
     kycDocumentType: string;
     additionalDocuments: File | FileMeta;
     joinedOn: Date;
     qrCode?: string;
+    _id: string;  
 }
 export const serviceTypes = ['Maid','Cook','Nurse','Driver'];
 export const Organization = ['ASBL', 'Springs Helpers'];
