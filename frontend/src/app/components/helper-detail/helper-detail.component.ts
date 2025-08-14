@@ -64,7 +64,7 @@ export class HelperDetailComponent {
       const url = photo.url;
       return `https://res.cloudinary.com/dg5aldure/image/upload/w_200,h_200,c_fill/helper_upload/${url.substring(url.lastIndexOf('/')+1)}`;
     }
-    return '';
+    return 'https://ui-avatars.com/api/?name='+this.helper?.fullName+'&background=random&color=fff&rounded=true&length=2';
   }
   idCardOpen(){
     const dialogRef = this.dialog.open(SubmissionComponent,{
