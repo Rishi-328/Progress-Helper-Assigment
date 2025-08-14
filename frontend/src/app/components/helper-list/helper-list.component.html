@@ -2,7 +2,7 @@
   <div *ngFor="let helper of helperUsers" (click)="onSelect(helper)" class="helper-item"  [class.active]="selectedHelper?.employeeId === helper.employeeId"> 
     <img [src]="getPhotoUrl(helper)" alt="Helper Profile" class="avatar">
     <div class="details">
-      <div class="helper-name">{{ helper.fullName }}</div>
+      <div class="helper-name" [attr.title]="helper.fullName">{{ helper.fullName }}</div>
       <div class="helper-role">{{ helper.typeOfService }}</div>
     </div>
   </div>

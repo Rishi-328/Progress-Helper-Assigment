@@ -30,6 +30,7 @@
           [helperForm]="helperForm"
           [useCase]="'add-helper'"
           (formAction)="stepper.next()"
+          (emitPhotoUrl)="photoUrl = $event"
         ></app-helper-form>
       </div>
       <div *ngSwitchCase="1" class="form-content">
@@ -41,7 +42,7 @@
         ></app-additional-form>
       </div>
       <div *ngSwitchCase="2" class="form-content">
-        <app-add-helper-review [helperForm]="helperForm"></app-add-helper-review>
+        <app-add-helper-review [helperForm]="helperForm" [photoUrl]="photoUrl"></app-add-helper-review>
         <div class="btn-container">
           <button mat-raised-button color="primary" (click)="stepper.previous()">Previous</button>
           <button mat-raised-button color="primary" (click)="onFormSubmit()" [disabled]="helperForm.invalid">

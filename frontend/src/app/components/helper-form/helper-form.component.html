@@ -111,7 +111,7 @@
             KYC Document is required.
             </mat-error>
       </div>
-      <div *ngIf="helperForm.get('kycDocument')?.value" class="file-preview" (click)="openKycDialog()">
+      <div *ngIf="helperForm.get('kycDocument')?.value" class="file-preview" (click)="openOrPreviewKyc()">
         <div class="pdf-box">
           <mat-icon color="warn" class="pdf-icon">picture_as_pdf</mat-icon>
           <div class="file-details">

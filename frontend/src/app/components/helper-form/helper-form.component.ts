@@ -19,6 +19,7 @@ export class HelperFormComponent {
   @Input() helperForm!: FormGroup;
   @Input() useCase: 'add-helper' | 'update-helper' =  'add-helper';
   @Output() formAction = new EventEmitter<void>();
+  @Output() emitPhotoUrl = new EventEmitter<string | null>();
   dialog = inject(MatDialog);
   @Input() uploadedPhotoUrl: string | null = null;
   selectedPhotoFile: File | null = null;
@@ -32,6 +33,17 @@ export class HelperFormComponent {
   constructor(private fb: FormBuilder,
       private toastService: ToastService,
   ) {}
+  photoPreview(file: File){
+    if (file && file instanceof File) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.uploadedPhotoUrl = reader.result as string;
+        this.photoText = file.name;
+        this.emitPhotoUrl.emit(this.uploadedPhotoUrl);
+      };
+      reader.readAsDataURL(file);
+    } 
+  }
   onPhotoSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -45,9 +57,9 @@ export class HelperFormComponent {
         return;
       }
       this.selectedPhotoFile = file;
-      this.uploadedPhotoUrl = URL.createObjectURL(file);
       this.photoText = file.name;
       this.helperForm.patchValue({ photo: file });
+      this.photoPreview(file);
     }
   }
   displayText(): string {
@@ -98,8 +110,21 @@ export class HelperFormComponent {
       }
     });
   }
+  openOrPreviewKyc(): void{
+    if(this.useCase === 'update-helper'){
+      const preview = this.helperForm.get('kycDocument')?.value.url;
+      if(preview){
+        window.open(preview,'_blank');
+      }
+    }else if(this.useCase === 'add-helper'){
+      this.openKycDialog();
+    }
+  }
   formSubmit(){
     this.formAction.emit();
+  }
+  ngOnInit(): void{
+    this.photoPreview(this.helperForm.get('photo')?.value as File);
   }
 }
 

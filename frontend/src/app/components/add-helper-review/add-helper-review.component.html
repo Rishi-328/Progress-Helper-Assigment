@@ -1,8 +1,8 @@
 <div class="details-pane" *ngIf="helperForm">
   <div class="header">
-    <mat-icon matListItemIcon class="avatar">{{ helperForm.get('fullName')?.value[0] | uppercase }}</mat-icon>
+    <img [src]="getPhotoUrl()" alt="Helper Profile" class="avatar">
     <div class="info">
-      <div class="helper-name">{{ helperForm.get('fullName')?.value }}</div>
+      <div class="helper-name" [attr.title]="helperForm.get('fullName')?.value">{{ helperForm.get('fullName')?.value }}</div>
 <div class="helper-role">{{ helperForm.get('typeOfService')?.value }}</div>
 
     </div>

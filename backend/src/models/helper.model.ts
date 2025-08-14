@@ -48,9 +48,6 @@ const helperSchema = new Schema({
     },
     vehicleNumber:{
         type: String,
-        required: function(this: {vehicleType: string}){
-            return this.vehicleType !== 'None';
-        }
     },
     kycDocument: {
         type: {

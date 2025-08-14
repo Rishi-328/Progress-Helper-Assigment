@@ -2,7 +2,7 @@
   <div class="header">
     <img [src]="helper.photo?getPhotoUrl():'https://ui-avatars.com/api/?name='+helper.fullName+'&background=random&color=fff&rounded=true&length=2'" alt="Helper Profile" class="avatar">
     <div class="info">
-      <div class="helper-name">{{ helper.fullName }}</div>
+      <div class="helper-name" [attr.title]="helper.fullName">{{ helper.fullName }}</div>
       <div class="helper-role">{{ helper.typeOfService }}</div>
     </div>
     <span class="actions">

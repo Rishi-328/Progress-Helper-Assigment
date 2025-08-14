@@ -18,7 +18,10 @@ export class AddHelperReviewComponent implements OnInit {
   currentDate: Date = new Date();
   @Input() helperForm?: FormGroup;
   kycFileUrl: string | null = null;
-
+  @Input() photoUrl: string | null = null;
+  getPhotoUrl(): string{
+    return this.photoUrl || 'https://ui-avatars.com/api/?name='+this.helperForm?.get('fullName')?.value+'&background=random&color=fff&rounded=true&length=2';
+  }
   ngOnInit(): void {
     if (this.helperForm?.get('kycDocument')) {
       this.kycFileUrl = URL.createObjectURL(this.helperForm.get('kycDocument')?.value);

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterModule ,ActivatedRoute} from '@angular/router';
+import { RouterModule ,ActivatedRoute, Router} from '@angular/router';
 import { MaterialModule } from '../../shared/material.module';
 import { HelpersService } from '../../services/helpers.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -22,6 +22,7 @@ export class UpdateHelperComponent {
   helperId : string | null = null;
   helperForm!: FormGroup;
   dialog = inject(MatDialog);
+  router = inject(Router);
   route: ActivatedRoute = inject(ActivatedRoute);
   helperService = inject(HelpersService);
   fb = inject(FormBuilder);
@@ -94,12 +95,14 @@ export class UpdateHelperComponent {
         .subscribe({
           next: (response)=>{
             this.toastService.success(response.message);
+            this.router.navigate(['/home']);
           },
           error: (error)=>{
             this.toastService.error('Failed to update helper');
           }
         })
     }
+
     
   }
 

@@ -18,6 +18,9 @@ export const createHelper = async (req: Request, res: Response) => {
         return res.status(400).json({message: 'Helper with this email already exists'});
       }
     }
+    if(req.body.vehicleType !== 'None' && !req.body.vehicleNumber){
+      return res.status(400).json({message: 'Vehicle number is required when vehicle type is specified'});
+    }
     await getNextId()
       .then((id)=>{
         req.body.employeeId = id;

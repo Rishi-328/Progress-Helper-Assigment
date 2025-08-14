@@ -45,6 +45,14 @@
       justify-content: center;
       align-items: center;
       text-align: center;
+      .name{
+        max-width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        &:hover{
+          cursor: pointer;
+        }
+      }
       p{
         color: black;
         font-size: 18px;
@@ -80,16 +88,16 @@
       -webkit-print-color-adjust: exact;
       font-size: 15px;
       padding: 10px;
-      ::ng-deep app-info-row .label {
-        font-weight: bold;
-        color: white;
-        
+      .info-row {
+        display: flex;
+        .label,.value {
+          flex: 1; 
+          color: white;
+        }
+        .label {
+          font-weight: bold;
+        }
       }
-
-      ::ng-deep app-info-row .value {
-        color: white;
-      }
-
     }
     .qr-code{
       display: flex;
@@ -126,3 +134,4 @@
     display: none;
   }
 }
+

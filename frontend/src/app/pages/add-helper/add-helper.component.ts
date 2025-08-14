@@ -27,6 +27,7 @@ export class AddHelperComponent implements OnInit {
   helperForm!: FormGroup;
   dialog = inject(MatDialog);
   router = inject(Router);
+  photoUrl: string | null = null;
   constructor(private fb: FormBuilder,
     private toastService: ToastService,
     private helperService : HelpersService,
