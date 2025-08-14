@@ -5,9 +5,18 @@
     align-items: center;
     height: 100%;
     h3{
-        color: blue;
-        span{
+        display: flex;
+        gap: 0.5rem;
+        .name{
+            color: blue;
+            max-width: 150px; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+        .added{
             color: black;
         }
+
     }
 }

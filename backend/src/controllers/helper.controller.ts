@@ -83,11 +83,11 @@ export const getHelpers = async (req: Request, res: Response) => {
           const end = new Date(endDate).setHours(23,59,59,999);
           filter.joinedOn = {$gte: start, $lte: end};
         }
-        let query = HelperModel.find(filter);
+        const pipe : any[]= [{$match: filter}]
         if(sortBy){
-          query = query.collation({ locale: "en", strength: 2 }).sort({[sortBy]:1});
+          pipe.push({$sort: {[sortBy]: 1}});
         }
-        const helpers = await query;
+        const helpers = await HelperModel.aggregate(pipe);
         res.status(200).json(helpers);
 
     }catch(error){

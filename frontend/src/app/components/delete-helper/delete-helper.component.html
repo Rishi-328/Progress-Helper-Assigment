@@ -3,7 +3,11 @@
 </h2>
 <mat-dialog-content class="dialog-content">
     <mat-icon class="warning">warning</mat-icon>   
-    <p>Delete<span> {{fullName}} ({{typeOfService}})</span></p>
+    <p>
+    Delete
+    <span class="name">{{ fullName }}</span>
+    <span class="type"> ({{ typeOfService }})</span>
+    </p>
     <mat-hint>You can't undo this action.</mat-hint>
     <mat-divider></mat-divider>
 </mat-dialog-content>
