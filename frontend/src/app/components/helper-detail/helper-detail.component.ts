@@ -57,7 +57,12 @@ export class HelperDetailComponent {
     }
     return (this.helper?.kycDocument as { url: string }).url; 
   }
-
+  getAdditionalDocumentUrl(): string {
+    if (typeof File !== 'undefined' && this.helper?.additionalDocuments instanceof File) {
+      return '';
+    }
+    return (this.helper?.additionalDocuments as { url: string }).url;
+  }
   getPhotoUrl(): string{
     const photo = this.helper?.photo as {url: string, name: string, size: number};
     if(photo && typeof photo.url === 'string') {

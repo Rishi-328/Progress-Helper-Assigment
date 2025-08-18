@@ -34,6 +34,14 @@
             View
         </a>
     </div>
+    <div class="file-preview">
+        <span class="label">Additional Documents</span>
+        <a *ngIf="helper.additionalDocuments"  class="view-link" [href]="getAdditionalDocumentUrl()" target="_blank" rel="noopener noreferrer">
+            <mat-icon class="view-icon">visibility</mat-icon>
+            View 
+        </a>
+        <span *ngIf="!helper.additionalDocuments" style="margin-left: 5px;">-</span>
+    </div>
 
     <app-divider text="SERVICE DETAILS"></app-divider>
     <app-info-row label="Type" [value]="helper.typeOfService"></app-info-row>
