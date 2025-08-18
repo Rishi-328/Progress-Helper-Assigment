@@ -1,19 +1,16 @@
-import  { Request, Response } from 'express';
-import HelperModel from '../models/helper.model'; 
-import {getImageName }from '../utils/ExtractImageName';
-import {deleteImage, uploadImage} from '../utils/cloudinary.utils'; 
-import { getNextId } from '../utils/getNextId';
-import generateQrCode from '../utils/qrcode';
+import  { Request, Response } from 'express'; 
+import { HelperService}  from '../services/Helper.Service';
+
+const helperService = new HelperService();
 
 export const createHelper = async (req: Request, res: Response) => {
-  let cleanUpUrls: string[] = [];
   try {
-    const phoneNumberExist = await HelperModel.findOne({phone: req.body.phone});
+    const phoneNumberExist = await helperService.checkPhoneExists(req.body.phone);
     if(phoneNumberExist){
       return res.status(400).json({message: 'Helper with this phone number already exists'});
     }
     if(req.body.email){
-      const emailExist = await HelperModel.findOne({email: req.body.email});
+      const emailExist = await helperService.checkEmailExists(req.body.email);
       if(emailExist){
         return res.status(400).json({message: 'Helper with this email already exists'});
       }
@@ -21,75 +18,21 @@ export const createHelper = async (req: Request, res: Response) => {
     if(req.body.vehicleType !== 'None' && !req.body.vehicleNumber){
       return res.status(400).json({message: 'Vehicle number is required when vehicle type is specified'});
     }
-    await getNextId()
-      .then((id)=>{
-        req.body.employeeId = id;
-      })
-      .catch(error =>{
-        console.error('Error in generating employeeId: ',error);
-    })
     const files = req.files as {
       [fiedname: string]: Express.Multer.File[];
     }
-    const fileNames = ['photo','kycDocument','additionalDocuments'];
-    for(const field of fileNames){
-      const file = files?.[field]?.[0];
-      if(file){
-        const public_id = `${field}-${Date.now()}`;
-        const result = await uploadImage(file,public_id);
-        req.body[field] = {
-          url : result.secure_url,
-          name: file.originalname,
-          size: file.size
-        };
-        cleanUpUrls.push(public_id);
-      }
-    }
-    const newHelper = new HelperModel(req.body);
-    const qrCodeUrl = await generateQrCode(newHelper.employeeId,newHelper.fullName,newHelper.typeOfService);
-    newHelper.qrCode = qrCodeUrl;
-    await newHelper.save();
+    const newHelper = await helperService.createHelper(req.body,files);
     res.status(201).json(newHelper);
   }catch (error) {
     res.status(500).json({message: 'Failed to create helper',error});
-    for(const public_id of cleanUpUrls){
-      deleteImage(public_id);
-    }
-
   }
 };
 
 export const getHelpers = async (req: Request, res: Response) => {
     try{
-        const {sortBy,searchTerm,service,org,startDate,endDate} = req.body;
-        let filter: any = {};
-        if(searchTerm){
-          const safeSearch = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-          const regex = new RegExp(safeSearch,'i');
-          filter.$or = [
-              {fullName: regex},
-              {employeeId: isNaN(+safeSearch) ? -1 : +safeSearch},
-              {phone: regex}
-            ]
-        }
-        if(service?.length > 0){
-          filter.typeOfService = { $in: service };
-        }
-        if(org?.length > 0){
-          filter.organizationName = { $in: org }; 
-        } 
-        if(startDate && endDate){
-          const start = new Date(startDate).setHours(0, 0, 0, 0);
-          const end = new Date(endDate).setHours(23,59,59,999);
-          filter.joinedOn = {$gte: start, $lte: end};
-        }
-        const pipe : any[]= [{$match: filter}]
-        if(sortBy){
-          pipe.push({$sort: {[sortBy]: 1}});
-        }
-        const helpers = await HelperModel.aggregate(pipe);
-        res.status(200).json(helpers);
-
+      const {sortBy,searchTerm,service,org,startDate,endDate} = req.body;
+      const helpers = await helperService.getHelpers({searchTerm,service,org,startDate,endDate,sortBy});
+      res.status(200).json(helpers);
     }catch(error){
         res.status(500).json({message: 'Failed to get helpers', error});
     }
@@ -97,7 +40,7 @@ export const getHelpers = async (req: Request, res: Response) => {
 
 export const getCount = async (req: Request, res: Response)=>{
   try{
-    const length = await HelperModel.countDocuments({});
+    const length = await helperService.getCount();
     res.status(200).json({count: length});
   }catch(error){
     res.status(500).json({message:'Failed to get count',error});
@@ -108,7 +51,7 @@ export const getCount = async (req: Request, res: Response)=>{
 export const getHelperById = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
-    const helper = await HelperModel.findById(id);
+    const helper = await helperService.getHelperById(id);
     if (helper) {
       res.status(200).json(helper);
     }else{
@@ -122,25 +65,11 @@ export const getHelperById = async (req: Request, res: Response) => {
 export const deleteHelper = async (req: Request, res: Response)=>{
   try{
     const {id} = req.params;
-    const helper = await HelperModel.findByIdAndDelete({ _id: id});
-    if(!helper){
-      return res.status(404).json({message: 'Helper not found'});
-    }
-    if(helper.photo){
-      const photoName = getImageName(helper.photo.url ?? '');
-      deleteImage(photoName);
-    }
-    if(helper.kycDocument){
-      const kycName = getImageName(helper.kycDocument.url ?? '');
-      deleteImage(kycName);
-    } 
-    if(helper.additionalDocuments){
-      const additionalName = getImageName(helper.additionalDocuments.url ?? '');
-      deleteImage(additionalName);
-    }  
-    
+    const helper = await helperService.deleteHelper(id);
     if(helper){   
       res.status(200).json({message: `Deleted ${helper.fullName}`});   
+    }else{
+      res.status(404).json({message: 'Helper not found'});
     }
   }catch(error){
     res.status(500).json({message: 'Failed to delete helper', error});
@@ -154,30 +83,8 @@ export const updateHelper = async (req: Request, res: Response) => {
       [fieldname: string]: Express.Multer.File[];
     }
     const updateData = {...req.body};
-    const fileNames = ['photo', 'kycDocument', 'additionalDocuments'];
-    for(const field of fileNames){
-      const file = files?.[field]?.[0];
-      if(file){
-        const data = await HelperModel.findById<{[key:string]:any}>(id,{_id : 0, [field]: 1});
-        if (data?.[field]) {
-          deleteImage(getImageName(data[field].url ?? '')); 
-        }
-        const public_id = `${field}-${Date.now()}`;
-        const result = await uploadImage(file,public_id);
-        updateData[field] = {
-          url : result.secure_url,
-          name: file.originalname,
-          size: file.size
-        };
-      }else{
-        if(req.body[field]){
-          updateData[field] = req.body[field];
-        }
-      }
-
-    }
-    const helper = await HelperModel.findByIdAndUpdate(id,updateData,{ new: true });
-    if (helper) {
+    const helper = await helperService.updateHelper(id, updateData, files);
+    if(helper) {
       res.status(200).json({ message: 'Changes Saved!'});
     } else {
       res.status(404).json({ message: 'Helper not found' });
