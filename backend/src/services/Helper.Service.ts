@@ -3,6 +3,7 @@ import { deleteImage, uploadImage } from '../utils/cloudinary.utils';
 import { getImageName } from '../utils/ExtractImageName';
 import { getNextId } from '../utils/getNextId';
 import generateQrCode from '../utils/qrcode';
+import ExcelJS from 'exceljs';
 
 export class HelperService{
     checkFieldExists = async(field: string)=>{
@@ -134,6 +135,67 @@ export class HelperService{
             deleteImage(additionalName);
         }  
         return helper;
+    }
+    downloadHelpers = async(helpers: any[])=>{
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Helpers');
+        worksheet.columns = [
+            { header: 'Employee ID', key: 'employeeId', width: 15 },
+            { header: 'Full Name', key: 'fullName', width: 30 },
+            { header: 'Photo', key:'photo', width: 30},
+            { header: 'Type of Service', key: 'typeOfService', width: 20 },
+            { header: 'Organization Name', key: 'organizationName', width: 25 },
+            { header: 'Phone', key: 'phone', width: 15 },
+            { header: 'Email', key: 'email', width: 25 },
+            { header: 'KYC Document', key: 'kycDocument', width: 30 },
+            { header: 'KYC Document Type', key: 'kycDocumentType', width: 20 },
+            { header: 'Vehicle Type', key: 'vehicleType', width: 20 },
+            { header: 'Vehicle Number', key: 'vehicleNumber', width: 20 },
+            { header: 'Joined On', key: 'joinedOn', width: 20 },
+            { header: 'Additional Documents', key: 'additionalDocuments', width: 30 },
+        ]
+        helpers.forEach(helper =>{
+            const row = worksheet.addRow({
+                employeeId: helper.employeeId,
+                fullName: helper.fullName,
+                photo: helper.photo?.url,
+                typeOfService: helper.typeOfService,
+                organizationName: helper.organizationName,  
+                phone: helper.phone,
+                email: helper.email,
+                kycDocument: helper.kycDocument?.url,
+                kycDocumentType: helper.kycDocumentType,
+                vehicleType: helper.vehicleType,    
+                vehicleNumber: helper.vehicleNumber,
+                joinedOn: helper.joinedOn,
+                additionalDocuments: helper.additionalDocuments?.url
+            });
+            if(helper.photo?.url){
+                row.getCell('photo').value = {
+                    text: helper.photo.url,
+                    hyperlink: helper.photo.url
+                }
+            }
+            if(helper.kycDocument?.url){
+                row.getCell('kycDocument').value = {
+                    text: helper.kycDocument.url,
+                    hyperlink: helper.kycDocument.url
+                }
+            }
+            if(helper.additionalDocuments?.url){
+                row.getCell('additionalDocuments').value = {
+                    text: helper.additionalDocuments.url,
+                    hyperlink: helper.additionalDocuments.url
+                }
+            }
+            
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
+        return buffer;
+      
+          
+       
     }
 }
 

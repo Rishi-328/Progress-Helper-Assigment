@@ -120,3 +120,25 @@ export const updateHelper = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to update helper', error });
   }
 }
+
+export const downloadHelpers = async(req: Request, res: Response)=>{
+  try{
+    const helpers = req.body;
+    if(!helpers || helpers.length === 0){
+      return res.status(400).json({message: 'No helpers to download'});
+    }
+    const buffer = await helperService.downloadHelpers(helpers);
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=helpers.xlsx"
+    );
+    res.status(200).send(buffer);
+
+  }catch(error){
+    res.status(500).json({message: 'Failed to download helpers', error});
+  }
+}

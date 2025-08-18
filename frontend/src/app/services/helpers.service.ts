@@ -42,4 +42,8 @@ export class HelpersService {
     return this.httpClient.delete<{message: string}>(`${this.url}/delete/${id}`);
   } 
 
+  downloadHelpers(helperUsers: HelperUser[]): Observable<Blob>{
+    return this.httpClient.post(`${this.url}/download`, helperUsers, { responseType: 'blob' });
+  }
+
 }

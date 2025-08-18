@@ -53,6 +53,9 @@
     
     <mat-hint>{{helperUsers.length}} of {{totalCount}} results</mat-hint>
   </div>
+  <button matIconButton (click)="downloadHelpers()" class="list-icon">
+        <mat-icon>download</mat-icon>
+  </button>
   <button mat-raised-button color="primary" class="add-btn" (click)="navigateToAddHelper()">+ Add Helper</button>
 </div>
 

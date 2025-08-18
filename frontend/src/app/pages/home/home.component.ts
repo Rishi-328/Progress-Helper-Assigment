@@ -99,6 +99,19 @@ export class HomeComponent implements OnInit {
     this.selectedDate = event.value;
     this.getHelperUsers();
   }
+  downloadHelpers(){
+    this.helperService.downloadHelpers(this.helperUsers)
+      .subscribe((response: Blob) =>{
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "helpers.xlsx";
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+      })
+
+  }
   ngOnInit(){
     this.getHelperUsers();
     this.getCount();
