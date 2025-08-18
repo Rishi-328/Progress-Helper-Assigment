@@ -39,8 +39,7 @@ const helperSchema = new Schema({
         unique: true
     },
     email: {
-        type: String,
-        unique: true
+        type: String
     },
     vehicleType: {
         type: String,
