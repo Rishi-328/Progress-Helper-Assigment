@@ -5,13 +5,9 @@ import { getNextId } from '../utils/getNextId';
 import generateQrCode from '../utils/qrcode';
 
 export class HelperService{
-    checkPhoneExists = async(phone: string)=>{
-        const phoneNumberExist = await HelperModel.findOne({phone: phone});
+    checkFieldExists = async(field: string)=>{
+        const phoneNumberExist = await HelperModel.findOne({field: field});
         return phoneNumberExist;
-    }
-    checkEmailExists = async(email: string)=>{
-        const emailExist = await HelperModel.findOne({email: email});
-        return emailExist;
     }
     getCount = async() => {
         const length = await HelperModel.countDocuments({});
@@ -62,6 +58,16 @@ export class HelperService{
     createHelper = async(data: any,files?: {[field: string]: Express.Multer.File[]} ) => {
         let cleanUpUrls: string[] = [];
         try{
+            const phoneNumberExist = await this.checkFieldExists(data.phone);
+            if(phoneNumberExist){
+                return {message: 'Helper with this phone number already exists'};
+            }
+            if(data.email){
+                const emailExist = await this.checkFieldExists(data.email);
+                if(emailExist){
+                    return {message: 'Helper with this email already exists'};
+                }
+            }
             const id = await getNextId();
             data.employeeId = id;
             const fileNames = ['photo','kycDocument','additionalDocuments'];

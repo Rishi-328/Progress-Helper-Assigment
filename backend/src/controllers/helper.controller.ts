@@ -5,24 +5,32 @@ const helperService = new HelperService();
 
 export const createHelper = async (req: Request, res: Response) => {
   try {
-    const phoneNumberExist = await helperService.checkPhoneExists(req.body.phone);
-    if(phoneNumberExist){
-      return res.status(400).json({message: 'Helper with this phone number already exists'});
-    }
-    if(req.body.email){
-      const emailExist = await helperService.checkEmailExists(req.body.email);
-      if(emailExist){
-        return res.status(400).json({message: 'Helper with this email already exists'});
-      }
-    }
-    if(req.body.vehicleType !== 'None' && !req.body.vehicleNumber){
-      return res.status(400).json({message: 'Vehicle number is required when vehicle type is specified'});
-    }
+    const {typeOfService,organizationName,fullName,languages,gender,phone,email,vehicleType,vehicleNumber,kycDocumentType} = req.body;
     const files = req.files as {
       [fiedname: string]: Express.Multer.File[];
     }
-    const newHelper = await helperService.createHelper(req.body,files);
-    res.status(201).json(newHelper);
+    if(!typeOfService || !organizationName || !fullName || !languages || !gender || !phone || !vehicleType || !kycDocumentType){
+      return res.status(400).json({message: "All fields are required"});
+    }
+    if(vehicleType !== 'None' && !vehicleNumber){
+      return res.status(400).json({message: "Vehicle number is required when vehicle type is specified"});
+    }
+    if(files && !files.kycDocument){
+      return res.status(400).json({message: "KYC document are required"});
+    }
+    const response = await helperService.createHelper({
+      typeOfService,
+      organizationName,
+      fullName,
+      languages, 
+      gender,
+      phone,
+      email,
+      vehicleType,
+      vehicleNumber,
+      kycDocumentType
+    },files);
+    res.status(201).json(response);
   }catch (error) {
     res.status(500).json({message: 'Failed to create helper',error});
   }
@@ -51,6 +59,9 @@ export const getCount = async (req: Request, res: Response)=>{
 export const getHelperById = async (req: Request, res: Response) => {
   try {
     const {id} = req.params;
+    if(!id){
+      return res.status(400).json({message: 'ID is required'});
+    }
     const helper = await helperService.getHelperById(id);
     if (helper) {
       res.status(200).json(helper);
@@ -65,6 +76,9 @@ export const getHelperById = async (req: Request, res: Response) => {
 export const deleteHelper = async (req: Request, res: Response)=>{
   try{
     const {id} = req.params;
+    if(!id){
+      return res.status(400).json({message: 'ID is required'});
+    }
     const helper = await helperService.deleteHelper(id);
     if(helper){   
       res.status(200).json({message: `Deleted ${helper.fullName}`});   
@@ -79,6 +93,9 @@ export const deleteHelper = async (req: Request, res: Response)=>{
 export const updateHelper = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    if(!id){
+      return res.status(400).json({message: 'ID is required'});
+    }
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[];
     }

@@ -62,6 +62,7 @@ export class HomeComponent implements OnInit {
         next: (response: HelperUser[])=>{
           this.helperUsers = response;
           this.selectedHelper = this.helperUsers.length > 0 ? this.helperUsers[0] : undefined;
+          this.getCount();
         },
       });
       this.sortTerm = '';
