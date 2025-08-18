@@ -99,8 +99,18 @@ export const updateHelper = async (req: Request, res: Response) => {
     const files = req.files as {
       [fieldname: string]: Express.Multer.File[];
     }
-    const updateData = {...req.body};
-    const helper = await helperService.updateHelper(id, updateData, files);
+    const {typeOfService,organizationName,fullName,languages,gender,phone,email,vehicleType,vehicleNumber} = req.body;
+    const helper = await helperService.updateHelper(id,{
+      typeOfService,
+      organizationName,
+      fullName,
+      languages,
+      gender,
+      phone,
+      email,
+      vehicleType,
+      vehicleNumber
+    }, files);
     if(helper) {
       res.status(200).json({ message: 'Changes Saved!'});
     } else {
