@@ -48,7 +48,7 @@
   </div>
     <div class="search-input">
       <mat-icon>search</mat-icon>
-      <input matInput placeholder="Name, Employee ID, Phone" [(ngModel)]="searchTerm" name="search" type="search" (ngModelChange)="getHelperUsers()" />
+      <input matInput placeholder="Name, Employee ID, Phone" [(ngModel)]="searchTerm" name="search" type="search" (ngModelChange)="onSearchChange($event)" />
     </div>
     
     <mat-hint>{{helperUsers.length}} of {{totalCount}} results</mat-hint>

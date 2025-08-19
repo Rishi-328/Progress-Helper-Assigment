@@ -27,6 +27,7 @@ export class HomeComponent implements OnInit {
   totalCount: number = 0;
   sortTerm: string = 'employeeId';
   searchTerm: string = '';
+  private timer: any;
   serviceTypes: string[] = serviceTypes;
   Organization: string[] = Organization;
   iconMap: {[key: string]: string} = iconMap;
@@ -65,8 +66,7 @@ export class HomeComponent implements OnInit {
           this.getCount();
         },
       });
-      this.sortTerm = '';
-      this.searchTerm = '';  
+      this.sortTerm = ''; 
   }
   getCount(){
     this.helperService.getCount()
@@ -98,6 +98,12 @@ export class HomeComponent implements OnInit {
   onDateChange(event: any) {
     this.selectedDate = event.value;
     this.getHelperUsers();
+  }
+  onSearchChange(value : string){
+    clearTimeout(this.timer);
+    this.timer = setTimeout(()=>{
+      this.getHelperUsers();
+    },500);
   }
   downloadHelpers(){
     this.helperService.downloadHelpers(this.helperUsers)
