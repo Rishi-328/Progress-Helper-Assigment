@@ -28,6 +28,7 @@ export class AddHelperComponent implements OnInit {
   dialog = inject(MatDialog);
   router = inject(Router);
   photoUrl: string | null = null;
+  addHelper: boolean = true;
   constructor(private fb: FormBuilder,
     private toastService: ToastService,
     private helperService : HelpersService,
@@ -64,6 +65,7 @@ export class AddHelperComponent implements OnInit {
     })
   }
   onFormSubmit(){
+    this.addHelper = false;
     if (this.helperForm.invalid) {
       this.toastService.error('Please fill all required fields.');
       return;
@@ -84,6 +86,7 @@ export class AddHelperComponent implements OnInit {
     this.helperService.addHelper(formData)
       .subscribe({
         next: (response)=>{
+          this.addHelper = true;
           this.toastService.success('Helper added successfully');
           if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
