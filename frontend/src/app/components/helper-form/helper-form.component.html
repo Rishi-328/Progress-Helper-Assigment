@@ -42,12 +42,16 @@
       <mat-select-trigger>
           {{displayText()}}
       </mat-select-trigger>
-      <mat-checkbox 
-        [checked]="!isAllSelected"
-        [indeterminate]="!isIndeterminate"
-        (change)="toggleAllSelection()">
-        Select All
-      </mat-checkbox>
+      <div class="check-box">
+        <mat-checkbox 
+          [checked]="isAllSelected()"
+          [indeterminate]="isIndeterminate()"
+          (change)="toggleAllSelection()">
+          Select All
+        </mat-checkbox>
+        <div class="line"></div>
+        <span class="text">{{ helperForm.get('languages')?.value?.length }}/{{ languages.length }}</span>
+      </div>
       <mat-option *ngFor="let language of languages" [value]="language.value">{{language.label}}</mat-option>
   </mat-select>
 
