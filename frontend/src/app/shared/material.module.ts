@@ -17,6 +17,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatBadgeModule} from '@angular/material/badge';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 const materialModules = [
   MatCardModule,
@@ -40,7 +41,8 @@ const materialModules = [
   MatDialogModule,
   MatMenuModule,
   MatBadgeModule,
-  MatDatepickerModule
+  MatDatepickerModule,
+  InfiniteScrollDirective
 ];
 
 @NgModule({

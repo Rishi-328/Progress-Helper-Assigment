@@ -38,9 +38,9 @@ export const createHelper = async (req: Request, res: Response) => {
 
 export const getHelpers = async (req: Request, res: Response) => {
     try{
-      const {sortBy,searchTerm,service,org,startDate,endDate} = req.body;
-      const helpers = await helperService.getHelpers({searchTerm,service,org,startDate,endDate,sortBy});
-      res.status(200).json(helpers);
+      const {sortBy,searchTerm,service,org,startDate,endDate,page} = req.body;
+      const result = await helperService.getHelpers({searchTerm,service,org,startDate,endDate,sortBy,page});
+      res.status(200).json(result);
     }catch(error){
         res.status(500).json({message: 'Failed to get helpers', error});
     }

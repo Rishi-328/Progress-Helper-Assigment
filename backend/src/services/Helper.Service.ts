@@ -18,13 +18,14 @@ export class HelperService{
         const helper = await HelperModel.findById(id);
         return helper;
     }
-    getHelpers = async({searchTerm,service,org,startDate,endDate,sortBy}: {
+    getHelpers = async({searchTerm,service,org,startDate,endDate,sortBy,page}: {
         searchTerm?: string;
         service?: string[];
         org?: string[];
         startDate?: Date;
         endDate?: Date;
         sortBy?: string;
+        page?: number;
     }) =>{
         let filter: any = {};
         if(searchTerm){
@@ -53,8 +54,11 @@ export class HelperService{
         if(sortBy){
             pipe.push({$sort: {[sortBy]: 1}});
         }
+        const skip = page ? page * 10 : 0;
+        pipe.push({$skip: skip},{$limit: 10});
         const helpers = await HelperModel.aggregate(pipe);
-        return helpers;
+        const totalCount = helpers.length;
+        return { helpers, totalCount };
     }
     createHelper = async(data: any,files?: {[field: string]: Express.Multer.File[]} ) => {
         let cleanUpUrls: string[] = [];
