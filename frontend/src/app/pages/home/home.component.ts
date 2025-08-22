@@ -11,11 +11,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { serviceTypes,Organization,iconMap } from './../../models/helper.model';
 import { FilterMultiselectComponent } from '../../shared/filter-multiselect/filter-multiselect.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,HelperDetailComponent,HelperListComponent,AddHelperComponent,FilterMultiselectComponent,MaterialModule,MatProgressSpinnerModule],
+  imports: [CommonModule,HelperDetailComponent,HelperListComponent,AddHelperComponent,FilterMultiselectComponent,MaterialModule,MatProgressSpinnerModule,NgxSkeletonLoaderModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -23,7 +24,6 @@ export class HomeComponent implements OnInit {
   page: number = 0;
   loading: boolean = false;
   allLoaded: boolean = false;
-  selectedDate: Date = new Date();
   selectedHelper?: HelperUser;
   router = inject(Router);
   helperService = inject(HelpersService);
@@ -54,22 +54,26 @@ export class HomeComponent implements OnInit {
     if(reset){
       this.helperUsers = [];
       this.page = 0;
+      this.selectedHelper = this.helperUsers[0];
       this.allLoaded = false;
     }
+    if(this.loading || this.allLoaded) return;
     const normalizeUTC  = (date: Date) =>{
       return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     }
     const startDate = this.rangeForm.value.start ? normalizeUTC(this.rangeForm.value.start) : undefined;
     const endDate = this.rangeForm.value.end ? normalizeUTC(this.rangeForm.value.end) : undefined;
-    this.helperService.getHelpers(
-      this.sortTerm,
-      this.searchTerm,
-      this.service.value || [],
-      this.org.value || [],
-      startDate,
-      endDate,
-      this.page,
-    )
+    this.loading = true;
+    setTimeout(()=>{
+      this.helperService.getHelpers(
+        this.sortTerm,
+        this.searchTerm,
+        this.service.value || [],
+        this.org.value || [],
+        startDate,
+        endDate,
+        this.page,
+      )
       .subscribe({
         next: (response: any)=>{
           if(response.totalCount === 0){
@@ -84,6 +88,7 @@ export class HomeComponent implements OnInit {
           
         },
       });
+    },500)
   }
   getCount(){
     this.helperService.getCount()
@@ -113,13 +118,11 @@ export class HomeComponent implements OnInit {
     this.hiddenDate = true;
     this.getHelperUsers();
   }
-  onDateChange(event: any) {
-    this.selectedDate = event.value;
-    this.getHelperUsers();
-  }
   applyDate(){
     this.hiddenDate = false;
-    this.getHelperUsers();
+    if(this.rangeForm.value.start && this.rangeForm.value.end){
+      this.getHelperUsers();
+    }
   }
   onSearchChange(value : string){
     clearTimeout(this.timer);
@@ -140,21 +143,9 @@ export class HomeComponent implements OnInit {
       })
 
   }
-  loadMore(){
-    if(this.allLoaded || this.loading) return;
-    this.loading = true;
-    setTimeout(()=>{
-      this.getHelperUsers(false);
-    },1000);
-  }
   ngOnInit(){
     this.getHelperUsers();
     this.getCount();
-    this.rangeForm.valueChanges.subscribe((value)=>{
-      if(value.start && value.end){
-        this.getHelperUsers(false);
-      }
-    })
   }
 
 }

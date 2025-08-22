@@ -65,13 +65,29 @@
   [infiniteScrollDistance]="1"
   [infiniteScrollThrottle]="300"
   [scrollWindow]="false"
-  (scrolled)="loadMore()">
+  (scrolled)="getHelperUsers(false)">
     <app-helper-list [helperUsers]="helperUsers" [selectedHelper]="selectedHelper" (selectedHelperEmit)="onSelectedHelper($event)"></app-helper-list>
-    <div *ngIf="loading" class="loading">
-      <mat-spinner diameter="30" ></mat-spinner>Loading
+    <div *ngFor="let i of [].constructor(helperUsers.length==0?7:1)">
+      <div *ngIf="loading" class="loading">
+        <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '55px',height:'55px'}"></ngx-skeleton-loader>
+        <div style="display: flex; flex-direction: column;">
+          <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'150px',height: '20px'}"></ngx-skeleton-loader>
+          <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'100px',height: '10px'}"></ngx-skeleton-loader>
+        </div>
+      </div>
     </div>
   </mat-card>
   <mat-card class="right">
     <app-helper-detail [helper]="selectedHelper" (deleteDone)="getHelperUsers()"></app-helper-detail>
+    <div *ngIf="loading" class="loading">
+      <div style="display: flex; margin-bottom: 20px;">
+          <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '55px',height:'55px'}"></ngx-skeleton-loader>
+          <div style="display: flex; flex-direction: column;">
+              <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'150px',height: '20px'}"></ngx-skeleton-loader>
+              <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'100px',height: '10px'}"></ngx-skeleton-loader>
+          </div>
+      </div>
+      <ngx-skeleton-loader count="7"  [theme]="{'border-radius':'5px',width:'700px',height: '30px', margin:'10px'}"></ngx-skeleton-loader>
+    </div>
   </mat-card>
 </div>
