@@ -1,0 +1,93 @@
+<nav>
+  <mat-toolbar color="light">
+    <span>Helpers</span>
+  </mat-toolbar>
+</nav>
+<div class="sidebar">
+  <div class="search-bar">
+    <div class="sort">
+      <button matIconButton [matMenuTriggerFor]="sort" class="list-icon">
+        <mat-icon>swap_vert</mat-icon>
+      </button>
+      <mat-menu #sort="matMenu">
+        <button mat-menu-item (click)="onSortChange('fullName')">Helpers Name(A-Z)</button>
+        <button mat-menu-item (click)="onSortChange('employeeId')">Employee ID</button>
+      </mat-menu>
+    </div>
+    <div class="filter-options">
+      <button matIconButton matButton="elevated" (click)="showFilter = !showFilter" class="list-icon" matBadge="1" matBadgeSize="small" [matBadgeHidden]="hiddenFilter">
+      <mat-icon>filter_alt</mat-icon>
+      </button>
+      <div class="filter">
+        <mat-card *ngIf="showFilter" class="filter-card">
+        <h3>Filter By</h3>
+
+        <app-filter-multiselect [label]="'Service'" [options]="serviceTypes" [control]="service" [iconMap]="iconMap"></app-filter-multiselect>
+
+        <app-filter-multiselect [label]="'Organization'" [options]="Organization" [control]="org"></app-filter-multiselect>
+
+        <div class="filter-btns">
+          <button mat-raised-button color="primary" (click)="resetFilter()">Reset</button>
+          <button mat-raised-button color="primary" (click)="applyFilter()">Apply</button>
+        </div>
+      </mat-card>
+      </div>
+    </div>
+  <div class="calender">
+    <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="rangeForm">
+      <input matStartDate formControlName="start" placeholder="Start date" >
+      <input matEndDate formControlName="end" placeholder="End date">
+    </mat-date-range-input>
+    <mat-date-range-picker #rangePicker>
+      <mat-date-range-picker-actions>
+        <button mat-raised-button color="primary" matDateRangePickerCancel (click)="resetDate()">Reset</button>
+        <button mat-raised-button color="primary" matDateRangePickerApply (click)="applyDate()">Apply</button>
+      </mat-date-range-picker-actions>
+    </mat-date-range-picker>
+    <button matIconButton (click)="rangePicker.open()" matBadge="1" matBadgeSize="small" [matBadgeHidden]="hiddenDate" class="list-icon"><mat-icon>event</mat-icon></button>
+  </div>
+    <div class="search-input">
+      <mat-icon>search</mat-icon>
+      <input matInput placeholder="Name, Employee ID, Phone" [(ngModel)]="searchTerm" name="search" type="search" (ngModelChange)="onSearchChange($event)" />
+    </div>
+    
+    <mat-hint>{{helperUsers.length}} of {{totalCount}} results</mat-hint>
+  </div>
+  <button matIconButton (click)="downloadHelpers()" class="list-icon">
+        <mat-icon>download</mat-icon>
+  </button>
+  <button mat-raised-button color="primary" class="add-btn" (click)="navigateToAddHelper()">+ Add Helper</button>
+</div>
+
+<div class="container">
+  <mat-card class="left"
+  infiniteScroll
+  [infiniteScrollDistance]="1"
+  [infiniteScrollThrottle]="300"
+  [scrollWindow]="false"
+  (scrolled)="getHelperUsers(false)">
+    <app-helper-list [helperUsers]="helperUsers" [selectedHelper]="selectedHelper" (selectedHelperEmit)="onSelectedHelper($event)"></app-helper-list>
+    <div *ngFor="let i of [].constructor(helperUsers.length==0?7:1)">
+      <div *ngIf="loading" class="loading">
+        <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '55px',height:'55px'}"></ngx-skeleton-loader>
+        <div style="display: flex; flex-direction: column;">
+          <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'150px',height: '20px'}"></ngx-skeleton-loader>
+          <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'100px',height: '10px'}"></ngx-skeleton-loader>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+  <mat-card class="right">
+    <app-helper-detail [helper]="selectedHelper" (deleteDone)="getHelperUsers()"></app-helper-detail>
+    <div *ngIf="loading" class="loading">
+      <div style="display: flex; margin-bottom: 20px;">
+          <ngx-skeleton-loader count="1" appearance="circle" [theme]="{width: '55px',height:'55px'}"></ngx-skeleton-loader>
+          <div style="display: flex; flex-direction: column;">
+              <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'150px',height: '20px'}"></ngx-skeleton-loader>
+              <ngx-skeleton-loader count="1"  [theme]="{'border-radius':'5px',width:'100px',height: '10px'}"></ngx-skeleton-loader>
+          </div>
+      </div>
+      <ngx-skeleton-loader count="7"  [theme]="{'border-radius':'5px',width:'700px',height: '30px', margin:'10px'}"></ngx-skeleton-loader>
+    </div>
+  </mat-card>
+</div>

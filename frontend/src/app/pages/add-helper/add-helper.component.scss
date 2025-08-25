@@ -1,0 +1,49 @@
+mat-card{
+  width: 70%;
+}
+.stepper-layout{
+  display: flex;
+  .stepper-container{
+    min-width: 320px;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 8px;
+    position: sticky;
+    height: 90vh;
+    background-color: Rgb(241 243 247);
+    border: 1px solid #d3d3d3;
+    margin-left: 1rem;
+    .stepper-text{
+      font-size: 0.8rem;
+      color: gray;
+    }
+  }
+  .step-content{
+    width: 70%;
+    height: 90vh;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 8px;
+    overflow: scroll;
+    margin: auto;
+    
+  }
+
+}
+.btn-container {
+  margin-top: 2rem;
+  text-align: right;
+  display: flex;
+  gap: 2rem;
+  justify-content: flex-end;
+}
+.back-button{
+  color: black;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin: 1rem;
+  font-weight: bold;
+}
+
+

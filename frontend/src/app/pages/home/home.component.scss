@@ -1,0 +1,123 @@
+.container {
+  height: 78%;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  justify-content: center;;
+
+  .right{
+    flex: 1;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
+  .left{
+    height: 100%;
+    overflow: auto;
+    width: 25%;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-right: 1px solid #e0e0e0;
+    .loading{
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+.sidebar {
+  height: 5%;
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-grow: 1;
+    button{
+      gap: 1rem;
+      display: flex;
+    }
+    .search-input{
+      display: flex;
+      align-items: center;
+      height: 33px;
+      width: 17%;
+      gap: 0.2rem;
+      padding: 0.2rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      input{
+        width: 100%;
+        border: none;
+        outline: none;
+      }
+      input[type="search"]::-webkit-search-cancel-button {
+        &:hover{
+          cursor: pointer;
+        }
+      }
+     
+   }
+    .filter-card{
+        padding: 1.5rem;
+        position: absolute;
+        top: 9.5rem; 
+        left: 80px;
+        z-index: 1000;
+        .filter-btns {  
+          display: flex;
+          justify-content: end;
+          gap: 1.5rem;
+          margin-top: 1rem;
+        }
+      }
+    
+  }
+  .list-icon {
+    cursor: pointer;
+    color: #444;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 0.4rem 0.4rem;
+    transition: all 0.2s ease;
+    &:hover {
+      color: #000;
+      background-color: #e0e0e0;
+      border-color: #999;
+    }
+  }
+  .add-btn{
+    margin-left: 1rem;
+    white-space: nowrap;
+  }
+  mat-hint{
+    color: #999;
+  }
+}
+
+::ng-deep .mat-date-range-input-container{  
+  display: none !important;
+}
+::ng-deep .mat-mdc-menu-content {
+  padding: 15px !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  font-size: 5px !important;
+  border-radius: 10px !important;
+  margin-top: 5px !important;
+}
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: rgb(231, 230, 247) !important;
+}
+::ng-deep .mat-datepicker-content{
+  top: 140px !important;
+  left: 105px !important;
+  position: fixed !important;
+
+}

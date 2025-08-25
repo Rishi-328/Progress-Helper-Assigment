@@ -1,0 +1,56 @@
+<nav>
+  <div>
+    <a [routerLink]="['/home']" class="back-button">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      <span>Add Helper</span>
+    </a>
+  </div>
+</nav>
+
+<div class="stepper-layout">
+  <mat-vertical-stepper class="stepper-container" [linear]="true" #stepper>
+    <mat-step [stepControl]="helperForm" [editable]="true">
+      <ng-template matStepLabel>Helper Details<div class="stepper-text">Add helper details</div></ng-template>
+      
+    </mat-step>
+
+    <mat-step [stepControl]="helperForm" [optional]="true">
+      <ng-template matStepLabel>Documents<div class="stepper-text">Upload related documents</div></ng-template>
+      
+    </mat-step>
+
+    <mat-step [stepControl]="helperForm">
+      <ng-template matStepLabel>Review<div class="stepper-text">Check the information and review</div></ng-template>
+    </mat-step>
+  </mat-vertical-stepper>
+  <div class="step-content">
+    <ng-container [ngSwitch]="stepper.selectedIndex">
+      <div *ngSwitchCase="0" class="form-content">
+        <app-helper-form
+          [helperForm]="helperForm"
+          [useCase]="'add-helper'"
+          (formAction)="stepper.next()"
+          (emitPhotoUrl)="photoUrl = $event"
+        ></app-helper-form>
+      </div>
+      <div *ngSwitchCase="1" class="form-content">
+        <app-additional-form
+          [helperForm]="helperForm"
+          [useCase]="'add-helper'"
+          (previous)="stepper.previous()"
+          (next)="stepper.next()"
+        ></app-additional-form>
+      </div>
+      <div *ngSwitchCase="2" class="form-content">
+        <app-add-helper-review [helperForm]="helperForm" [photoUrl]="photoUrl"></app-add-helper-review>
+        <div class="btn-container">
+          <button mat-raised-button color="primary" (click)="stepper.previous()">Previous</button>
+          <button mat-raised-button color="primary" (click)="onFormSubmit()" [disabled]="helperForm.invalid || !addHelper">
+            + Add Helper
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>

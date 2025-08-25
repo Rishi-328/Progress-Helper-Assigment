@@ -1,0 +1,34 @@
+<nav>
+    <a [routerLink]="['/home']" class="back-button">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+      <span>Edit Helper</span>
+    </a>
+</nav>
+<div class="update-helper-container">
+    <div class="sidebar">
+        <button [class.active]="activeOption === 'details'" (click)="makeActive('details')"><mat-icon>construction</mat-icon>Helper Details</button>
+        <button [class.active]="activeOption === 'documents'" (click)="makeActive('documents')"><mat-icon>description</mat-icon>Documents</button>
+    </div>
+    <div class="details">
+        <div *ngIf="activeOption == 'details'">
+            <div class="form-content">
+            <app-helper-form 
+                [helperForm]="helperForm" 
+                [useCase]="'update-helper'" 
+                (formAction)="updateHelper()"
+                [uploadedPhotoUrl]="uploadedPhotoUrl"
+                >
+            </app-helper-form>
+            </div>
+        </div>
+        <div *ngIf="activeOption == 'documents'">
+            <div class="form-content">
+                <app-additional-form
+                [helperForm]="helperForm"
+                [useCase]="'update-helper'"
+                (formUpdate)="updateHelper()">
+                </app-additional-form>
+            </div>
+        </div>
+    </div>
+</div>
